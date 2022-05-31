@@ -1,7 +1,7 @@
-# ESC 1D 
+## ESC 1D 
 Repo for our project
 
-Members:
+# Members:
 Constance Chua Jie Ning – 1005254 
 Eunice Chua – 1005546
 Lyu Haozhi - 1004888
