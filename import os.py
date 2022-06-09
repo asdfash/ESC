@@ -32,7 +32,7 @@ except:
 #import excel file
 f = filedialog.askopenfilename(initialdir=workingdir, filetypes=[("Excel files", "*.xlsx")])
 if f == "":
-    error = "error reading file or no file selected, exiting\n"
+    error = "error reading excel file or no file selected, exiting\n"
     print(error)
     if log:
         lf.write(error)
@@ -56,13 +56,14 @@ if log:
     lf.write("excel file exported\n")
 
 
+
+# cleanup
+lf.close()
+root.destroy()
+
 # import arcpy
 # from arcpy import env,da
 # env.workspace = r"C:\Users\jitth\Desktop\testGDB.gdb"
-#cleanup
-# lf.close()
-# root.destroy()
-
 # for fc in arcpy.ListFeatureClasses("*"):
 #         count = da.TableToNumPyArray(fc,"*")
 #         print (count)
