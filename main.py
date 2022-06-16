@@ -4,11 +4,12 @@ import pandas as pd
 import os
 import datetime
 import arcpy
+import numpy as np
 
 
 #settings
-filename = os.path.basename(__file__)
-workingdir = __file__[:len(__file__)-len(filename)]
+filename = os.path.basename("__file__")
+workingdir = "__file__"[:len("__file__")-len(filename)]
 logdir = workingdir + 'logs'
 arcpy.env.workspace = workingdir + "testGDB.gdb"
 
@@ -40,7 +41,12 @@ if f == "":
         lf.write(error)
     lf.close()
     exit()
-data = pd.read_excel(f)
+column_list = []
+data_column = pd.read_excel(f, 'Sheet1').columns
+for i in data_column:
+    column_list.append(i)
+converter = {col: str for col in column_list} 
+data = pd.read_excel(f, converters=converter) #read the dataframe as str datatype
 print("excel file imported")
 if log:
     lf.write("excel file imported\n")
@@ -64,7 +70,14 @@ df = pd.DataFrame(gdb, columns= label)
 print(df)
 
 #TODO: check files
-dataout =data
+col_name = data.columns
+df = df[col_name]
+dataout = pd.DataFrame()
+for i in col_name:
+    dataout[f'Check_{i}'] = np.where(data[i] == df[i], True, False)
+dataout['Overall_check'] = dataout.all(axis='columns')
+print(dataout)
+
 
 #export file
 dest = filedialog.askdirectory(initialdir=workingdir)
