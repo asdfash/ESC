@@ -60,6 +60,8 @@ def main(excelpath,gdbpath,outputpath,logpath):
                 row +=[i]
             gdb+=[row]
     df = pd.DataFrame(gdb, columns= label)
+    if log:
+        lf.write("gdb data imported\n")
     print(df)
 
     #TODO: check files
@@ -69,6 +71,8 @@ def main(excelpath,gdbpath,outputpath,logpath):
     for i in col_name:
         dataout[f'Check_{i}'] = np.where(data[i] == df[i], True, False)
     dataout['Overall_check'] = dataout.all(axis='columns')
+    if log:
+        lf.write("data comparison finished\n")
     print(dataout)
 
 
