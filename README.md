@@ -5,7 +5,7 @@ Repo for our project
 deliver a tool or application which would automate the checking of attributes tagged to the 3DUM against the unit information provided to the vendor for the creation of the models.
 
 ## Members:
-Constance Chua Jie Ning – 1005254 
+Constance Chua Jie Ning – 1005499
 
 Eunice Chua – 1005546
 
