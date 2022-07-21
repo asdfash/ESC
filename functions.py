@@ -67,7 +67,8 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA"):
 
     #TODO: check files
 
-    # col_name = data.columns
+    data_cols = data.columns
+    print(data_cols)
     # df = df[col_name]
     # dataout = pd.DataFrame()
     # for i in col_name:
@@ -75,6 +76,11 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA"):
     # dataout['Overall_check'] = dataout.all(axis='columns')
     # if log:
     #     lf.write("data comparison finished\n")
+    df = df[df["NUM_TYPE"]== "STRATA"] # remove rows that do not fit this condition
+    df_compare = df.copy().loc[:,data_cols] # remove columns that are not in exelsheet
+    ##########
+    dataout = dataframe_difference(df_compare, data, "right_only").drop(["_merge"], axis=1) #find difference
+            
     print(dataout)
 
 
@@ -92,3 +98,17 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA"):
         lf.write("excel file exported\n")
         # cleanup
         lf.close()
+
+#https://hackersandslackers.com/compare-rows-pandas-dataframes/
+def dataframe_difference(df1, df2, which=None):
+    """Find rows which are different between two DataFrames."""
+    comparison_df = df1.merge(
+        df2,
+        indicator=True,
+        how='outer'
+    )
+    if which is None:
+        diff_df = comparison_df[comparison_df['_merge'] != 'both']
+    else:
+        diff_df = comparison_df[comparison_df['_merge'] == which]
+    return diff_df
