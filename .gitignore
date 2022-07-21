@@ -1,2 +1,4 @@
 **/logs
 export.xlsx
+**/__pycache__
+config.txt
