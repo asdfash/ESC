@@ -18,7 +18,6 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA", header="NUM_TYPE
 
     #make log file
     try:
-        print(logpath)
         lf = open(logpath + timestamp + '.log', 'w')
         log = True
     except:
@@ -47,9 +46,10 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA", header="NUM_TYPE
     print(data)
 
     #get gdb
+    print(gdbpath)
     featureclasslist = arcpy.ListFeatureClasses("*")
     gdb=[]
-    desc = arcpy.Describe(gdbpath+'/'+featureclasslist[0])
+    desc = arcpy.Describe(gdbpath+featureclasslist[0])
     label=[]
     for field in desc.fields:
         label += [field.name]

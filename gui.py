@@ -46,7 +46,7 @@ except:
 
 #helper functions
 def runhelp():
-    functions.main(excelpath,gdbpath,outputpath,logpath,keywordtext['text'],headertext['text'])
+    functions.main(excelpath,gdbpath,outputpath,logpath,keywordtext.get(),headertext.get())
 
 def excelask():
     global excelpath
@@ -69,7 +69,7 @@ def excelask():
 
 def gdbask():
     global gdbpath
-    gdbpath = filedialog.askopenfilename(initialdir=workingdir, filetypes=[("GDB","gdb")]).removesuffix(".gdb")
+    gdbpath = filedialog.askopenfilename(initialdir=workingdir, filetypes=[("GDB","gdb")]).removesuffix("gdb")
     f = open("config.txt","w")
     try:
         f.write(excelpath)
