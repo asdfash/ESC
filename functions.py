@@ -85,7 +85,6 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA", header="NUM_TYPE
     df_compare = df.loc[:,data_cols] # remove columns that are not in exelsheet
     ##########
 
-    #TODO: 1. test this with fixed excel file and see if work
     #TODO: 3. if empty dont make excel file (optional aka not tonight)
 
     dataout1 = dataframe_difference(df_compare, data, which="right_only").drop(["_merge"], axis=1) #find difference
@@ -101,8 +100,8 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA", header="NUM_TYPE
         return
 
     #TODO: 2. rename output names to something more sensible eg. in_excel_but_wrong_or_not_in_gdb_, ect (i not good with names)
-    dataout1.to_excel(outputpath + "export1.xlsx",index = False)
-    dataout2.to_excel(outputpath + "export2.xlsx",index = False)
+    dataout1.to_excel(outputpath + "in-exel-not-gdb.xlsx",index = False)
+    dataout2.to_excel(outputpath + "in-gdb-not-exel.xlsx",index = False)
     print("excel file exported\n")
     if log:
         lf.write("excel file exported\n")
