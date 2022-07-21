@@ -6,7 +6,7 @@ import numpy as np
 
 
 
-def main(excelpath,gdbpath,outputpath,logpath):
+def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA"):
     arcpy.env.workspace = gdbpath
 
     #variables
@@ -35,7 +35,7 @@ def main(excelpath,gdbpath,outputpath,logpath):
             lf.close()
         return
     column_list = []
-    data_column = pd.read_excel(excelpath, 'Sheet1').columns
+    data_column = pd.read_excel(excelpath).columns
     for i in data_column:
         column_list.append(i)
     converter = {col: str for col in column_list} 
@@ -60,19 +60,21 @@ def main(excelpath,gdbpath,outputpath,logpath):
                 row +=[i]
             gdb+=[row]
     df = pd.DataFrame(gdb, columns= label)
+    print("gdb data imported")
     if log:
         lf.write("gdb data imported\n")
     print(df)
 
     #TODO: check files
-    col_name = data.columns
-    df = df[col_name]
-    dataout = pd.DataFrame()
-    for i in col_name:
-        dataout[f'Check_{i}'] = np.where(data[i] == df[i], True, False)
-    dataout['Overall_check'] = dataout.all(axis='columns')
-    if log:
-        lf.write("data comparison finished\n")
+
+    # col_name = data.columns
+    # df = df[col_name]
+    # dataout = pd.DataFrame()
+    # for i in col_name:
+    #     dataout[f'Check_{i}'] = np.where(data[i] == df[i], True, False)
+    # dataout['Overall_check'] = dataout.all(axis='columns')
+    # if log:
+    #     lf.write("data comparison finished\n")
     print(dataout)
 
 

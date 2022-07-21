@@ -1,1 +1,1 @@
-C:/Users/jitth/Desktop/ESC/TestGDBExcel.xlsx C:/Users/jitth/Desktop/ESC/testGDB.gdb C:/Users/jitth/Desktop/ESC/ C:/Users/jitth/Desktop/ESC/logs/
+C:/Users/jitth/Desktop/ESC/Unit Attributes(PIDB).xlsx C:/Users/jitth/Desktop/ESC/Toa Payoh/TPY_Batch12.gdb C:/Users/jitth/Desktop/ESC/ C:/Users/jitth/Desktop/ESC/logs/
