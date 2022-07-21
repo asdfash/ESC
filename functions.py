@@ -84,10 +84,8 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA", header="NUM_TYPE
     df = df[df[header]== keyword] # remove rows that do not fit this condition
     df_compare = df.loc[:,data_cols] # remove columns that are not in exelsheet
     ##########
-    dataout = dataframe_difference(df_compare, data, which="right_only")#find difference
-            
-    print(dataout)
-
+    dataout1 = dataframe_difference(df_compare, data, which="right_only").drop(["_merge"], axis=1) #find difference#find difference
+    dataout2 = dataframe_difference(df_compare, data, which="left_only").drop(["_merge"], axis=1) #find difference#find difference
 
     #export file
     if outputpath == "":
@@ -98,12 +96,15 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA", header="NUM_TYPE
             lf.close()
         return
 
-    dataout.to_excel(outputpath + "export.xlsx",index = False).drop(["_merge"], axis=1) #find difference
+    dataout1.to_excel(outputpath + "export1.xlsx",index = False)
+    dataout2.to_excel(outputpath + "export2.xlsx",index = False)
     print("excel file exported\n")
     if log:
         lf.write("excel file exported\n")
         # cleanup
         lf.close()
+
+
 
 #https://hackersandslackers.com/compare-rows-pandas-dataframes/
 def dataframe_difference(df1, df2, which=None):
