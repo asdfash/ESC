@@ -6,7 +6,7 @@ import numpy as np
 
 
 
-def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA"):
+def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA", header="NUM_TYPE"):
     arcpy.env.workspace = gdbpath
 
     #variables
@@ -68,7 +68,6 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA"):
     #TODO: check files
 
     data_cols = data.columns
-    print(data_cols)
     # df = df[col_name]
     # dataout = pd.DataFrame()
     # for i in col_name:
@@ -76,7 +75,7 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword="STRATA"):
     # dataout['Overall_check'] = dataout.all(axis='columns')
     # if log:
     #     lf.write("data comparison finished\n")
-    df = df[df["NUM_TYPE"]== "STRATA"] # remove rows that do not fit this condition
+    df = df[df[header]== keyword] # remove rows that do not fit this condition
     df_compare = df.copy().loc[:,data_cols] # remove columns that are not in exelsheet
     ##########
     dataout = dataframe_difference(df_compare, data, "right_only").drop(["_merge"], axis=1) #find difference
