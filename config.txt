@@ -1,4 +1,0 @@
-C:/Users/jitth/Desktop/ESC/Unit Attributes(PIDB).xlsx
-C:/Users/jitth/Desktop/ESC/Toa Payoh/TPY_Batch13.gdb/gdb
-C:/Users/jitth/Desktop/ESC/
-C:/Users/jitth/Desktop/ESC/logs/
