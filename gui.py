@@ -11,8 +11,7 @@ filename = os.path.basename("__file__")
 workingdir = "__file__"[:len("__file__")-len(filename)]
 config = workingdir + 'config.txt'
 defauloutput = workingdir
-defaultlog = workingdir + "logs/"
-
+defaultlog = workingdir + "/logs/"
 excelpath = ""
 gdbpath = ""
 outputpath = defauloutput
@@ -23,12 +22,15 @@ header = "NUM_TYPE"
 try:
     f = open("config.txt","r")
     ls = f.readlines()
-    excelpath = ls[0].removesuffix("\n")
-    gdbpath= ls[1].removesuffix("\n")
-    outputpath= ls[2].removesuffix("\n")
-    logpath= ls[3].removesuffix("\n")
+    excelpath = (ls[0])
+    gdbpath= (ls[1])
+    outputpath= (ls[2])
+    logpath= (ls[3])
+    keyword = (ls[4])
+    header = (ls[5])
     f.close()
 except:
+
     print("error, rebuilding config file with defaults")
     f = open("config.txt","w")
     try:
@@ -39,6 +41,10 @@ except:
         f.write(outputpath)
         f.write('\n')
         f.write(logpath)
+        f.write('\n')
+        f.write(keyword)
+        f.write('\n')
+        f.write(header)
         f.close()
     except:
         print("config saving error")
@@ -46,7 +52,7 @@ except:
 
 #helper functions
 def runhelp():
-    functions.main(excelpath,gdbpath,outputpath,logpath,keywordtext.get(),headertext.get())
+    functions.main(excelpath,gdbpath,outputpath,logpath,keywordtext.get(),headertext.get(),customtext.get())
 
 def excelask():
     global excelpath
@@ -60,6 +66,10 @@ def excelask():
         f.write(outputpath)
         f.write('\n')
         f.write(logpath)
+        f.write('\n')
+        f.write(keyword)
+        f.write('\n')
+        f.write(header)
         f.close()
     except:
         print("config saving error")
@@ -69,7 +79,7 @@ def excelask():
 
 def gdbask():
     global gdbpath
-    gdbpath = filedialog.askopenfilename(initialdir=workingdir, filetypes=[("GDB","gdb")]).removesuffix("gdb")
+    gdbpath = filedialog.askopenfilename(initialdir=workingdir, filetypes=[("GDB","gdb")])[:-3]
     f = open("config.txt","w")
     try:
         f.write(excelpath)
@@ -79,6 +89,10 @@ def gdbask():
         f.write(outputpath)
         f.write('\n')
         f.write(logpath)
+        f.write('\n')
+        f.write(keyword)
+        f.write('\n')
+        f.write(header)
         f.close()
     except:
         print("config saving error")
@@ -98,6 +112,10 @@ def outputask():
         f.write(outputpath)
         f.write('\n')
         f.write(logpath)
+        f.write('\n')
+        f.write(keyword)
+        f.write('\n')
+        f.write(header)
         f.close()
     except:
         print("config saving error")
@@ -117,6 +135,10 @@ def logask():
         f.write(outputpath)
         f.write('\n')
         f.write(logpath)
+        f.write('\n')
+        f.write(keyword)
+        f.write('\n')
+        f.write(header)
         f.close()
     except:
         print("config saving error")
@@ -194,6 +216,12 @@ headertext = ttk.Entry(master =keywordframebutton,width=25)
 headertext.pack()
 keywordframebutton.pack(side=tk.RIGHT)
 keywordframemain.pack(fill=tk.BOTH)
+
+customlabel = ttk.Label(master=mainframe, text="Excel custom headers (copy from excel and modify as req, leave blank if none)",width=100,padding=5)
+customlabel.pack()
+customtext = ttk.Entry(master=mainframe,width=100)
+customtext.pack()
+
 
 run = ttk.Button(text="run",master=mainframe,command=runhelp)
 run.pack(fill= tk.BOTH)
