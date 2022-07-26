@@ -4,7 +4,6 @@ import datetime
 import arcpy
 
 
-
 def logfile(logpath,timestamp):
     try:
         lf = open(logpath + timestamp + '.log', 'w')
@@ -112,9 +111,6 @@ def dataframe_difference(df1, df2, which=None):
     return diff_df
 
 
-
-
-
 def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
     arcpy.env.workspace = gdbpath
     #variables
@@ -172,7 +168,6 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
             logprint("custom header text found, but not correct number, double check spacing",lf,log)
            
         logprint("optional features processed",lf,log)
-
     except:
         error = "error with processing optional features, taking it as null and continuing\n"
         logprint(error,lf,log)
