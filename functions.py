@@ -5,9 +5,99 @@ import arcpy
 
 
 
+def logfile(logpath,timestamp):
+    try:
+        lf = open(logpath + timestamp + '.log', 'w')
+        log = True
+        print("log file created")
+    except:
+        print("log file failed to be created, conintuing")
+        log = False
+        lf =""
+    return lf,log
+
+def logprint(msg,lf,log,close =False):
+    print(msg)
+    if log:
+        lf.write(msg + "\n")
+        if close:
+            lf.close()
+
+def gdbdata(gdbpath,lf,log):
+    try:
+        #get gdb
+        logprint("importing gdb data",lf,log)
+        featureclasslist = arcpy.ListFeatureClasses("*")
+        gdb=[]
+        desc = arcpy.Describe(gdbpath+featureclasslist[0])
+        label=[]
+        for field in desc.fields:
+            label += [field.name]
+        for fc in featureclasslist:
+            for datar in arcpy.da.TableToNumPyArray(fc,"*"):
+                row = []
+                for i in datar:
+                    row +=[i]
+                gdb+=[row]
+        df = pd.DataFrame(gdb, columns= label)
+        logprint("gdb data imported",lf,log)
+        return df
+    except:
+        error = "error reading gdb file or no file selected\n"
+        logprint(error,lf,log,close=True)
+        return -1
+
+
+def excelfile(excelpath,lf,log):
+    try:
+        logprint("importing excel file",lf,log)
+
+        if excelpath == "":
+            error = "error reading excel file or no file selected\n"
+            logprint(error,lf,log,close=True)
+            return -1
+            
+        column_list = []
+        data_column = pd.read_excel(excelpath).columns
+        for i in data_column:
+            column_list.append(i)
+        converter = {col: str for col in column_list} 
+        data = pd.read_excel(excelpath, converters=converter) #read the dataframe as str datatype
+        logprint("excel file imported",lf,log)
+        return data
+
+    except:
+        error = "error reading excel file or no file selected\n"
+        logprint(error,lf,log,close=True)
+        return -1
+
+def compare(df,data,lf,log):
+    try:
+        logprint("copmaring data",lf,log)    
+        data_cols = data.columns
+        df_compare = df.loc[:,data_cols] # remove columns that are not in exelsheet
+        dataout1 = dataframe_difference(df_compare, data, which="right_only").drop(["_merge"], axis=1) #find difference
+        dataout2 = dataframe_difference(df_compare, data, which="left_only").drop(["_merge"], axis=1) #find difference
+        logprint("data compared",lf,log)
+        return dataout1,dataout2
+    except:
+        error = "error comparing, check header names or custom header\n"
+        logprint(error,lf,log,close=True)
+        return -1, -1
+
+def export(dataout1,dataout2,outputpath,lf,log):
+    try:
+        logprint("exporting excel file",lf,log)
+        dataout1.to_excel(outputpath + "in-exel-not-gdb.xlsx",index = False)
+        dataout2.to_excel(outputpath + "in-gdb-not-exel.xlsx",index = False)
+        logprint("excel file exported",lf,log)
+    except:
+        error = "error reading destination or no folder was selected selected\n"
+        logprint(error,lf,log,close=True)
+        return
+
 def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
     arcpy.env.workspace = gdbpath
-
     #variables
     timestamp = str(datetime.datetime.now()).replace(" ","").replace(".","").replace(":","")
 
@@ -26,79 +116,31 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
         header = header[:-2]
     if customtext[-2:]== "\n":
         customtext = customtext[:-2]
-    #make log folder
-    if not os.path.exists(logpath):
-        os.mkdir(logpath)
 
-    #make log file
+
+    #make log folder amd file
     try:
-        lf = open(logpath + timestamp + '.log', 'w')
-        log = True
-        print("log file created")
+        if not os.path.exists(logpath):
+            print("log folder not found, creating one")
+            os.mkdir(logpath)
+            lf,log = logfile(logpath,timestamp)
     except:
-        print("log file failed to be created, conintuing")
+        print("error creating log folder, continuing")
+        lf =""
         log = False
 
     #import excel file
-    try:
-        if excelpath == "":
-            error = "error reading excel file or no file selected\n"
-            print(error)
-            if log:
-                lf.write(error)
-                lf.close()
-            return
-            
-        column_list = []
-        data_column = pd.read_excel(excelpath).columns
-        for i in data_column:
-            column_list.append(i)
-        converter = {col: str for col in column_list} 
-        data = pd.read_excel(excelpath, converters=converter) #read the dataframe as str datatype
-        print("excel file imported")
-        if log:
-            lf.write("excel file imported\n")
-    except:
-        error = "error reading excel file or no file selected\n"
-        print(error)
-        if log:
-            lf.write(error)
-            lf.close()
-        return
-    try:
-        #get gdb
-        featureclasslist = arcpy.ListFeatureClasses("*")
-        gdb=[]
-        desc = arcpy.Describe(gdbpath+featureclasslist[0])
-        label=[]
-        for field in desc.fields:
-            label += [field.name]
-        for fc in featureclasslist:
-            for datar in arcpy.da.TableToNumPyArray(fc,"*"):
-                row = []
-                for i in datar:
-                    row +=[i]
-                gdb+=[row]
-        df = pd.DataFrame(gdb, columns= label)
-        
-        print("gdb data imported")
-        if log:
-            lf.write("gdb data imported\n")
-
-    except:
-        error = "error reading gdb file or no file selected\n"
-        print(error)
-        if log:
-            lf.write(error)
-            lf.close()
+    data = excelfile(excelpath,lf,log)
+    if data == -1:
         return
 
+    #import gdb data
+    df = gdbdata(gdbpath,lf,log)
+    if df == -1:
+        return
     
-    
-        #preprocessing optional features
-    print("preprocessing optional features")
-    if log:
-        lf.write("preprocessing optional features\n")
+    #process optional features
+    logprint("processing with optional features",lf,log)
     try:
         keyword = "".join(keyword.split())
         header = "".join(header.split())
@@ -108,50 +150,21 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
         if len(customtext) == data.shape[0]:
             data.columns = customtext
         elif customtext != []:
-            print("custom header text found, but not correct number, double check spacing ")
-            if log:
-                lf.write("custom header text found, but not correct number, double check spacing\n")
+            logprint("custom header text found, but not correct number, double check spacing",lf,log)
            
-        print("optional features processed")
-        if log:
-            lf.write("optional features processed\n")
+        logprint("optional features processed",lf,log)
+
     except:
         error = "error with processing optional features, taking it as null and continuing\n"
-        print(error)
-        if log:
-            lf.write(error)
-    ##########
+        logprint(error,lf,log)
 
-    #TODO: 3. if empty dont make excel file (optional aka not tonight)
-    try:
-        data_cols = data.columns
-        df_compare = df.loc[:,data_cols] # remove columns that are not in exelsheet
-        dataout1 = dataframe_difference(df_compare, data, which="right_only").drop(["_merge"], axis=1) #find difference
-        dataout2 = dataframe_difference(df_compare, data, which="left_only").drop(["_merge"], axis=1) #find difference
-    except:
-        error = "error comparing, check header names or custom header\n"
-        print(error)
-        if log:
-            lf.write(error)
-            lf.close()
+    #compare
+    dataout1 , dataout2 = compare(df,data, lf,log)
+    if dataout1 == -1:
         return
+
     #export file
-    try:
-        print("exporting excel file")
-        dataout1.to_excel(outputpath + "in-exel-not-gdb.xlsx",index = False)
-        dataout2.to_excel(outputpath + "in-gdb-not-exel.xlsx",index = False)
-        print("excel file exported\n")
-        if log:
-            lf.write("excel file exported\n")
-            lf.close()
-            return
-    except:
-        error = "error reading destination or no folder was selected selected\n"
-        print(error)
-        if log:
-            lf.write(error)
-            lf.close()
-        return
+    export(dataout1,dataout2,outputpath,lf,log)
 
 
 
