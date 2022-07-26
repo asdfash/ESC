@@ -23,6 +23,28 @@ def logprint(msg,lf,log,close =False):
         if close:
             lf.close()
 
+def excelfile(excelpath,lf,log):
+    try:
+        logprint("importing excel file",lf,log)
+
+        if excelpath == "":
+            error = "error reading excel file or no file selected\n"
+            logprint(error,lf,log,close=True)
+            return -1
+            
+        column_list = []
+        data_column = pd.read_excel(excelpath).columns
+        for i in data_column:
+            column_list.append(i)
+        converter = {col: str for col in column_list} 
+        data = pd.read_excel(excelpath, converters=converter) #read the dataframe as str datatype
+        logprint("excel file imported",lf,log)
+        return data
+    except:
+        error = "error reading excel file or no file selected\n"
+        logprint(error,lf,log,close=True)
+        return -1
+
 def gdbdata(gdbpath,lf,log):
     try:
         #get gdb
@@ -44,30 +66,6 @@ def gdbdata(gdbpath,lf,log):
         return df
     except:
         error = "error reading gdb file or no file selected\n"
-        logprint(error,lf,log,close=True)
-        return -1
-
-
-def excelfile(excelpath,lf,log):
-    try:
-        logprint("importing excel file",lf,log)
-
-        if excelpath == "":
-            error = "error reading excel file or no file selected\n"
-            logprint(error,lf,log,close=True)
-            return -1
-            
-        column_list = []
-        data_column = pd.read_excel(excelpath).columns
-        for i in data_column:
-            column_list.append(i)
-        converter = {col: str for col in column_list} 
-        data = pd.read_excel(excelpath, converters=converter) #read the dataframe as str datatype
-        logprint("excel file imported",lf,log)
-        return data
-
-    except:
-        error = "error reading excel file or no file selected\n"
         logprint(error,lf,log,close=True)
         return -1
 
@@ -94,7 +92,28 @@ def export(dataout1,dataout2,outputpath,lf,log):
     except:
         error = "error reading destination or no folder was selected selected\n"
         logprint(error,lf,log,close=True)
-        return
+
+#https://hackersandslackers.com/compare-rows-pandas-dataframes/
+def dataframe_difference(df1, df2, which=None):
+    df1 = df1.astype('string',errors='ignore')
+    df2 = df2.astype('string',errors='ignore')
+    df1 = df1.astype('int64',errors='ignore')
+    df2 = df2.astype('int64',errors='ignore')
+    comparison_df = df1.merge(
+        df2,
+        indicator=True,
+        how='outer',
+        sort = True
+    )
+    if which is None:
+        diff_df = comparison_df[comparison_df['_merge'] != 'both']
+    else:
+        diff_df = comparison_df[comparison_df['_merge'] == which]
+    return diff_df
+
+
+
+
 
 def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
     arcpy.env.workspace = gdbpath
@@ -165,27 +184,3 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
 
     #export file
     export(dataout1,dataout2,outputpath,lf,log)
-
-
-
-#https://hackersandslackers.com/compare-rows-pandas-dataframes/
-def dataframe_difference(df1, df2, which=None):
-    df1 = df1.astype('string',errors='ignore')
-    df2 = df2.astype('string',errors='ignore')
-    df1 = df1.astype('int64',errors='ignore')
-    df2 = df2.astype('int64',errors='ignore')
-    comparison_df = df1.merge(
-        df2,
-        indicator=True,
-        how='outer',
-        sort = True
-    )
-    if which is None:
-        diff_df = comparison_df[comparison_df['_merge'] != 'both']
-    else:
-        diff_df = comparison_df[comparison_df['_merge'] == which]
-    return diff_df
-
-
-    #TODO: 4. try except different parts and add print/log statements for error checking (optional)
-    #TODO: 5. refactor code to be able to test different things (optional)
