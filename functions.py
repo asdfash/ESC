@@ -138,7 +138,7 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
         if not os.path.exists(logpath):
             print("log folder not found, creating one")
             os.mkdir(logpath)
-            lf,log = logfile(logpath,timestamp)
+        lf,log = logfile(logpath,timestamp)
     except:
         print("error creating log folder, continuing")
         lf =""
