@@ -82,7 +82,7 @@ def compare(df,data,lf,log):
         logprint(error,lf,log,close=True)
         return -1, -1
 
-def export(dataout1,dataout2,outputpath,lf,log):
+def export(dataout1,dataout2,outputpath,lf="",log=0):
     try:
         logprint("exporting excel file",lf,log)
         dataout1.to_excel(outputpath + "in-exel-not-gdb.xlsx",index = False)
