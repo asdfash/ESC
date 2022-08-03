@@ -146,12 +146,12 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
 
     #import excel file
     data = excelfile(excelpath,lf,log)
-    if data == -1:
+    if type(data) == int:
         return
 
     #import gdb data
     df = gdbdata(gdbpath,lf,log)
-    if df == -1:
+    if  type(df) == int:
         return
     
     #process optional features
@@ -174,7 +174,7 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
 
     #compare
     dataout1 , dataout2 = compare(df,data, lf,log)
-    if dataout1 == -1:
+    if  type(dataout1) == int:
         return
 
     #export file
