@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import datetime
-import arcpy
+# import arcpy
 
 
 def logfile(logpath,timestamp):
@@ -87,12 +87,13 @@ def export(dataout1,dataout2,outputpath,lf="",log=0):
         logprint("exporting excel files",lf,log)
         if dataout1.empty:
             logprint("all in excel is in gdb",lf,log)
-        dataout1.to_excel(outputpath + "in-exel-not-gdb.xlsx",index = False)
+        dataout1.to_excel(outputpath + "in-excel-not-gdb.xlsx",index = False)
         if dataout2.empty:
             logprint("all in gdb is in excel",lf,log)
-        dataout2.to_excel(outputpath + "in-gdb-not-exel.xlsx",index = False)
+        dataout2.to_excel(outputpath + "in-gdb-not-excel.xlsx",index = False)
         logprint("excel files exported",lf,log)
     except:
+
         error = "error reading destination or no folder was selected selected\n"
         logprint(error,lf,log,close=True)
 
