@@ -84,10 +84,14 @@ def compare(df,data,lf="",log=0):
 
 def export(dataout1,dataout2,outputpath,lf="",log=0):
     try:
-        logprint("exporting excel file",lf,log)
+        logprint("exporting excel files",lf,log)
+        if dataout1.empty:
+            logprint("all in excel is in gdb",lf,log)
         dataout1.to_excel(outputpath + "in-exel-not-gdb.xlsx",index = False)
+        if dataout2.empty:
+            logprint("all in gdb is in excel",lf,log)
         dataout2.to_excel(outputpath + "in-gdb-not-exel.xlsx",index = False)
-        logprint("excel file exported",lf,log)
+        logprint("excel files exported",lf,log)
     except:
         error = "error reading destination or no folder was selected selected\n"
         logprint(error,lf,log,close=True)
@@ -146,12 +150,12 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
 
     #import excel file
     data = excelfile(excelpath,lf,log)
-    if data == -1:
+    if type(data) == int:
         return
 
     #import gdb data
     df = gdbdata(gdbpath,lf,log)
-    if df == -1:
+    if  type(df) == int:
         return
     
     #process optional features
@@ -174,7 +178,7 @@ def main(excelpath,gdbpath,outputpath,logpath,keyword, header,customtext):
 
     #compare
     dataout1 , dataout2 = compare(df,data, lf,log)
-    if dataout1 == -1:
+    if  type(dataout1) == int:
         return
 
     #export file
