@@ -15,14 +15,14 @@ def logfile(logpath,timestamp):
         lf =""
     return lf,log
 
-def logprint(msg,lf,log,close =False):
+def logprint(msg,lf="",log=0,close =False):
     print(msg)
     if log:
         lf.write(msg + "\n")
         if close:
             lf.close()
 
-def excelfile(excelpath,lf,log):
+def excelfile(excelpath,lf="",log=0):
     try:
         logprint("importing excel file",lf,log)
 
@@ -44,7 +44,7 @@ def excelfile(excelpath,lf,log):
         logprint(error,lf,log,close=True)
         return -1
 
-def gdbdata(gdbpath,lf,log):
+def gdbdata(gdbpath,lf="",log=0):
     try:
         #get gdb
         logprint("importing gdb data",lf,log)
@@ -68,7 +68,7 @@ def gdbdata(gdbpath,lf,log):
         logprint(error,lf,log,close=True)
         return -1
 
-def compare(df,data,lf,log):
+def compare(df,data,lf="",log=0):
     try:
         logprint("copmaring data",lf,log)    
         data_cols = data.columns
