@@ -84,10 +84,14 @@ def compare(df,data,lf="",log=0):
 
 def export(dataout1,dataout2,outputpath,lf="",log=0):
     try:
-        logprint("exporting excel file",lf,log)
+        logprint("exporting excel files",lf,log)
+        if dataout1.empty:
+            logprint("all in excel is in gdb",lf,log)
         dataout1.to_excel(outputpath + "in-exel-not-gdb.xlsx",index = False)
+        if dataout2.empty:
+            logprint("all in gdb is in excel",lf,log)
         dataout2.to_excel(outputpath + "in-gdb-not-exel.xlsx",index = False)
-        logprint("excel file exported",lf,log)
+        logprint("excel files exported",lf,log)
     except:
         error = "error reading destination or no folder was selected selected\n"
         logprint(error,lf,log,close=True)
