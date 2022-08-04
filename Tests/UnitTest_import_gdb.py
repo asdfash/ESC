@@ -2,7 +2,7 @@ import unittest
 from functions import *
 import numpy as np
 
-class excelFileTestCases(unittest.TestCase):
+class gdbFileTestCases(unittest.TestCase):
     def test_format(self):
         input = r"D:\SUTD\Term_5\50.003_Elements of Software Construction\Project\ESC\Samples\testGDB.gdb"
         self.assertTrue(input.endswith(".gdb"))
