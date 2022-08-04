@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 import datetime
-import arcpy
+
 
 
 def logfile(logpath,timestamp):

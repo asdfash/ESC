@@ -10,7 +10,7 @@ def logfile(logpath,timestamp):
         log = True
         print("log file created")
     except:
-        print("log file failed to be created, conintuing")
+        print("log file failed to be created, continuing")
         log = False
         lf =""
     return lf,log
