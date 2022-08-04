@@ -8,7 +8,7 @@ excelpath = r"D:\SUTD\Term_5\50.003_Elements of Software Construction\Project\ES
 gdbpath = r"D:\SUTD\Term_5\50.003_Elements of Software Construction\Project\ESC\Samples\TPY_Batch12.gdb"
 recordpath = r"D:\SUTD\Term_5\50.003_Elements of Software Construction\Project\ESC\Tests"
 
-def fuzz (exceldata, gdbdata):
+def fuzzing (exceldata, gdbdata):
     lf = open(recordpath + r"\fuzzerRecords.txt", 'w') 
     lf.write("No of data: " + str(gdbdata.shape[0]) + "\n")
     for j in exceldata.columns:
@@ -23,12 +23,28 @@ def fuzz (exceldata, gdbdata):
         lf.write("\n\n\n\n\n\n\n\n\n")
     lf.close()
 
+def randomFuzzing(exceldata, gdbdata):
+    i=0
+    col = exceldata.columns
+    num_data = exceldata.shape[0]
+    data = copy.deepcopy(exceldata)
+    while(True):
+        randint1 = random.randint(0, num_data-1)
+        randint2 = random.randint(0, len(col)-1)
+        randnum = random.randint(10000,100000)
+        data.at[randint1, col[randint2]] = randnum
+        dataout1, dataout2 = compare(gdbdata, data)
+        i+=1
+        print(dataout2.shape[0], i)
+        if(dataout2.shape[0] == gdbdata.shape[0]):
+            break
+
 arcpy.env.workspace = gdbpath            
 exceldata = excelfile(excelpath)
 gdb = gdbdata(gdbpath)
 gdb = gdb[gdb["NUM_TYPE"]== "STRATA"]
-fuzz(exceldata, gdb)
-
+# fuzzing(exceldata, gdb)
+randomFuzzing(exceldata, gdb)
 
 
 
