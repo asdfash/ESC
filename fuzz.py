@@ -2,7 +2,6 @@
 import random 
 import copy
 from  functions import *
-from import_gdb import *
 
 
 excelpath = r"D:\SUTD\Term_5\50.003_Elements of Software Construction\Project\ESC\Samples\Unit Attributes(PIDB).xlsx"
