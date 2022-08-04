@@ -3,5 +3,5 @@
 **/__pycache__
 config.txt
 .vscode
-in-exel-not-gdb.xlsx
-in-gdb-not-exel.xlsx
+in-excel-not-gdb.xlsx
+in-gdb-not-excel.xlsx
