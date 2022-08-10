@@ -39,20 +39,6 @@ def randomFuzzing(exceldata, gdbdata):
         if(dataout2.shape[0] == gdbdata.shape[0]):
             break
 
-def columnFuzzing(exceldata, gdbdata):
-    data = copy.deepcopy(exceldata)
-    num_col = exceldata.shape[1]
-    i = 0
-    while(True):
-        print(data)
-        col_list = list(data)
-        randint1 = random.randint(0, num_col-1)
-        randint2 = random.randint(0, num_col-1)
-        col_list[randint1], col_list[randint2] = col_list[randint2], col_list[randint1]
-        data.columns = col_list
-        dataout1, dataout2 = compare(gdbdata, data)
-        i+=1
-        print(dataout2.shape[0], i)
 
 def rowFuzzing(exceldata, gdbdata):
     data = copy.deepcopy(exceldata)
@@ -75,7 +61,6 @@ gdb = gdbdata(gdbpath)
 gdb = gdb[gdb["NUM_TYPE"]== "STRATA"]
 # fuzzing(exceldata, gdb)
 # randomFuzzing(exceldata, gdb)
-# columnFuzzing(exceldata, gdb)
 rowFuzzing(exceldata, gdb)
 
 
